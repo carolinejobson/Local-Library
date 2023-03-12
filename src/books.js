@@ -1,30 +1,45 @@
-const helper = require("./helpers");
-
-// *returns the author object that has the matching ID
 function findAuthorById(authors, id) {
-  return helper.returnAuthorById(authors, id);
+  return authors.filter((author) => author.id === id)
+  .find((author) => author);
 }
 
-// *returns the book object that has the matching ID
 function findBookById(books, id) {
-  return books.find((book) => book.id === id);
+  return books.filter((book) => book.id === id)
+    .find((book) => book);
 }
 
-// *returns an array with two arrays inside of it. The first array contains books that have been loaned out, and are not yet returned while the second array contains books that have been returned.
 function partitionBooksByBorrowedStatus(books) {
-  return helper.partitionBooksByBorrowedStatus(books);
+  const notReturned = books.filter((book) =>
+    !book.borrows[0].returned);
+  console.log(notReturned);
+  const returned = books.filter((book) =>
+    book.borrows[0].returned);
+  console.log(returned);
+  const total = [];
+  total.push(notReturned);
+  total.push(returned);
+  return total;
 }
 
-// *returns an array of ten transactions from the book's borrows key. Each transaction includes the related account information and the returned key.
 function getBorrowersForBook(book, accounts) {
-  const borrowLog = book.borrows.reduce((acc, transaction) => {
-    let matchedAccount = accounts.find(
-      (account) => account.id === transaction.id
-    );
-    acc.push({ ...transaction, ...matchedAccount });
-    return acc;
-  }, []);
-  return borrowLog.slice(0, 10);
+  const { borrows } = book;
+
+  const borrowers = borrows.map(({ id, returned })=> {
+    const account = accounts.find(account => account.id === id);
+
+    return {
+      ...account,
+      returned,
+    };
+  });
+
+  return borrowers
+    .sort((borrowerA, borrowerB) => {
+      const companyA = borrowerA.company;
+      const companyB = borrowerB.company;
+      return companyA.localeCompare(companyB);
+    })
+    .slice(0, 10);
 }
 
 module.exports = {
