@@ -1,6 +1,6 @@
 # Thinkful Assessment: Local Library
 
-Local-Library is a web page that uses Javascript algorithms to render various statistics on a dashboard.
+Local-library is a web page that uses Javascript algorithms to render various statistics on a dashboard.
 
 # Project Description
 
